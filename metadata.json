@@ -1,5 +1,5 @@
 {
-  "name": "VEO3 Video Generator",
-  "description": "Generate high-quality videos from text or image prompts using Google's VEO model. Customize aspect ratio and resolution, and view a history of your creations in a beautiful, minimalist interface.",
+  "name": "VEO & Imagen Generator | LANEXA",
+  "description": "Hasilkan video dan gambar berkualitas tinggi dari perintah teks menggunakan model VEO dan Imagen dari Google. Sesuaikan rasio aspek, lihat riwayat kreasi Anda, dan beralih dengan mulus di antara mode pembuatan.",
   "requestFramePermissions": []
 }

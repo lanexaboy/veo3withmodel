@@ -1,5 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
-import { ImageFile, RenderOptions, GenerationConfig } from '../types';
+import { ImageFile, VideoRenderOptions, VideoGenerationConfig, ImageRenderOptions, ImageGenerationConfig } from '../types';
 
 // IMPORTANT: This assumes process.env.API_KEY is set in the environment.
 const API_KEY = process.env.API_KEY;
@@ -32,20 +32,14 @@ export const fileToBase64 = (file: File): Promise<string> => {
 export const generateVideo = async (
   prompt: string,
   image: ImageFile | null,
-  options: RenderOptions,
-  config: GenerationConfig,
-  onProgress: (message: string) => void,
-  apiKeyOverride: string | null // New parameter
+  options: VideoRenderOptions,
+  config: VideoGenerationConfig,
+  onProgress: (message: string) => void
 ): Promise<string> => {
-  const effectiveApiKey = apiKeyOverride || API_KEY;
-  if (!effectiveApiKey) {
-    throw new Error("API_KEY is not configured. Please provide one or set the environment variable.");
+  if (!API_KEY) {
+    throw new Error("API_KEY is not configured. Please set the environment variable.");
   }
   
-  // Use the module-level 'ai' instance if no override is provided,
-  // otherwise, create a new instance with the override key.
-  const geminiClient = apiKeyOverride ? new GoogleGenAI({ apiKey: apiKeyOverride }) : ai;
-    
   onProgress("Initializing video generation...");
 
   const generateVideoParams: any = {
@@ -65,8 +59,7 @@ export const generateVideo = async (
       };
   }
 
-  // Use the determined geminiClient
-  let operation = await geminiClient.models.generateVideos(generateVideoParams);
+  let operation = await ai.models.generateVideos(generateVideoParams);
   
   onProgress("Video processing started. This may take a few minutes...");
 
@@ -85,8 +78,7 @@ export const generateVideo = async (
     const messageIndex = Math.min(pollCount - 1, progressMessages.length - 1);
     onProgress(progressMessages[messageIndex]);
 
-    // Use the determined geminiClient
-    operation = await geminiClient.operations.getVideosOperation({ operation: operation });
+    operation = await ai.operations.getVideosOperation({ operation: operation });
   }
 
   const downloadLink = operation.response?.generatedVideos?.[0]?.video?.uri;
@@ -96,12 +88,37 @@ export const generateVideo = async (
   }
 
   onProgress("Downloading video data...");
-  // Use the effectiveApiKey for fetching the video
-  const response = await fetch(`${downloadLink}&key=${effectiveApiKey}`);
+  const response = await fetch(`${downloadLink}&key=${API_KEY}`);
   if (!response.ok) {
       throw new Error(`Failed to fetch video: ${response.statusText}`);
   }
 
   const videoBlob = await response.blob();
   return URL.createObjectURL(videoBlob);
+};
+
+export const generateImages = async (
+    prompt: string,
+    options: ImageRenderOptions,
+    config: ImageGenerationConfig
+): Promise<string[]> => {
+    if (!API_KEY) {
+        throw new Error("API_KEY is not configured. Please set the environment variable.");
+    }
+
+    const response = await ai.models.generateImages({
+        model: config.model,
+        prompt: prompt,
+        config: {
+            numberOfImages: config.numberOfImages,
+            outputMimeType: 'image/png',
+            aspectRatio: options.aspectRatio,
+        },
+    });
+
+    if (!response.generatedImages || response.generatedImages.length === 0) {
+        throw new Error("Image generation failed or returned no result.");
+    }
+
+    return response.generatedImages.map(img => `data:image/png;base64,${img.image.imageBytes}`);
 };
