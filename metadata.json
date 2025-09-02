@@ -1,0 +1,5 @@
+{
+  "name": "VEO3 Video Generator",
+  "description": "Generate high-quality videos from text or image prompts using Google's VEO model. Customize aspect ratio and resolution, and view a history of your creations in a beautiful, minimalist interface.",
+  "requestFramePermissions": []
+}
