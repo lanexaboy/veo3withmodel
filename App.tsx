@@ -366,7 +366,7 @@ const App: React.FC = () => {
                 <div className="flex justify-between items-center mb-4 flex-shrink-0">
                   <h3 className="font-semibold text-xl">History</h3>
                   <Button variant="icon" className="h-8 w-8" title="Update API Key" onClick={() => setIsApiKeyModalOpen(true)}>
-                    <Key size={16} />
+                    <Key size={16} className={`${userApiKey ? 'text-green-400 drop-shadow-[0_0_4px_theme(colors.green.400)]' : 'text-red-400 drop-shadow-[0_0_4px_theme(colors.red.400)]'} transition-all`} />
                   </Button>
                 </div>
                 <div className="overflow-y-auto pr-2 -mr-2 custom-scrollbar h-40">
@@ -414,21 +414,9 @@ const App: React.FC = () => {
                               className="w-full p-2 bg-blue-900/20 border border-blue-400/20 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           >
                               <option className="bg-blue-900" value="veo-2.0-generate-001">VEO 2.0</option>
-                              <option className="bg-blue-900" value="veo-3.0-generate-preview">VEO 3.0</option>
+                              <option className="bg-blue-900" value="veo-3.0-generate-preview">VEO 3.0 Preview</option>
+			      <option className="bg-blue-900" value="veo-3.0-fast-generate-preview">VEO 3.0 Fast Preview</option>
                           </select>
-                      </div>
-                      <div>
-                          <label htmlFor="video-count-slider" className="text-sm font-medium text-blue-200 block mb-2">Number of Videos: <span className="font-bold text-white">{generationConfig.numberOfVideos}</span></label>
-                          <input 
-                              id="video-count-slider"
-                              type="range" 
-                              min="1" 
-                              max="4" 
-                              step="1"
-                              value={generationConfig.numberOfVideos}
-                              onChange={(e) => setGenerationConfig(c => ({...c, numberOfVideos: parseInt(e.target.value, 10)}))}
-                              className="w-full h-2 bg-blue-900/50 rounded-lg appearance-none cursor-pointer accent-sky-400"
-                          />
                       </div>
                     </div>
                   </div>

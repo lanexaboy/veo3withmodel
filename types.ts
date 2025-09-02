@@ -21,6 +21,6 @@ export interface ImageFile {
 }
 
 export interface GenerationConfig {
-  model: 'veo-2.0-generate-001' | 'veo-3.0-generate-preview';
+  model: 'veo-2.0-generate-001' | 'veo-1.0-generate-001';
   numberOfVideos: number;
 }

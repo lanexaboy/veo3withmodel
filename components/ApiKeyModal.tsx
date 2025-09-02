@@ -54,7 +54,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose, onSav
         <div className="p-6">
             <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold flex items-center gap-2">
-                    <Key size={20} className="text-sky-400" />
+                    <Key size={20} className={`${currentApiKey ? 'text-green-400 drop-shadow-[0_0_4px_theme(colors.green.400)]' : 'text-red-400 drop-shadow-[0_0_4px_theme(colors.red.400)]'} transition-all`} />
                     Update API Key
                 </h2>
                 <Button variant="icon" onClick={onClose} className="h-8 w-8 -mr-2 -mt-2">
